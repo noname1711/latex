@@ -1,0 +1,397 @@
+\documentclass[10pt, letterpaper]{article}
+
+% Packages:
+\usepackage[
+    ignoreheadfoot, % set margins without considering header and footer
+    top=2 cm, % seperation between body and page edge from the top
+    bottom=2 cm, % seperation between body and page edge from the bottom
+    left=2 cm, % seperation between body and page edge from the left
+    right=2 cm, % seperation between body and page edge from the right
+    footskip=1.0 cm, % seperation between body and footer
+    % showframe % for debugging 
+]{geometry} % for adjusting page geometry
+\usepackage[explicit]{titlesec} % for customizing section titles
+\usepackage{tabularx} % for making tables with fixed width columns
+\usepackage{array} % tabularx requires this
+\usepackage[dvipsnames]{xcolor} % for coloring text
+\definecolor{primaryColor}{RGB}{0, 79, 144} % define primary color
+\usepackage{enumitem} % for customizing lists
+\usepackage{fontawesome5} % for using icons
+\usepackage{amsmath} % for math
+\usepackage[
+    pdftitle={Hung Le's CV},
+    pdfauthor={Hung Le},
+    pdfcreator={LaTeX with HungLe},
+    colorlinks=true,
+    urlcolor=primaryColor
+]{hyperref} % for links, metadata and bookmarks
+\usepackage[pscoord]{eso-pic} % for floating text on the page
+\usepackage{calc} % for calculating lengths
+\usepackage{bookmark} % for bookmarks
+\usepackage{lastpage} % for getting the total number of pages
+\usepackage{changepage} % for one column entries (adjustwidth environment)
+\usepackage{paracol} % for two and three column entries
+\usepackage{ifthen} % for conditional statements
+\usepackage{needspace} % for avoiding page brake right after the section title
+\usepackage{iftex} % check if engine is pdflatex, xetex or luatex
+
+% Ensure that generate pdf is machine readable/ATS parsable:
+\ifPDFTeX
+    \input{glyphtounicode}
+    \pdfgentounicode=1
+    \usepackage[T1]{fontenc}
+    \usepackage[utf8]{inputenc}
+    \usepackage{lmodern}
+\fi
+
+\usepackage[default, type1]{sourcesanspro} 
+
+% Some settings:
+\AtBeginEnvironment{adjustwidth}{\partopsep0pt} % remove space before adjustwidth environment
+\pagestyle{empty} % no header or footer
+\setcounter{secnumdepth}{0} % no section numbering
+\setlength{\parindent}{0pt} % no indentation
+\setlength{\topskip}{0pt} % no top skip
+\setlength{\columnsep}{0.15cm} % set column seperation
+\makeatletter
+\let\ps@customFooterStyle\ps@plain % Copy the plain style to customFooterStyle
+\patchcmd{\ps@customFooterStyle}{\thepage}{
+    \color{gray}\textit{\small Page \thepage{} of \pageref*{LastPage}}
+}{}{} % replace number by desired string
+\makeatother
+\pagestyle{customFooterStyle}
+
+\titleformat{\section}{
+    % avoid page braking right after the section title
+    \needspace{4\baselineskip}
+    % make the font size of the section title large and color it with the primary color
+    \Large\color{primaryColor}
+}{
+}{
+}{
+    % print bold title, give 0.15 cm space and draw a line of 0.8 pt thickness
+    % from the end of the title to the end of the body
+    \textbf{#1}\hspace{0.15cm}\titlerule[0.8pt]\hspace{-0.1cm}
+}[] % section title formatting
+
+\titlespacing{\section}{
+    % left space:
+    -1pt
+}{
+    % top space:
+    0.3 cm
+}{
+    % bottom space:
+    0.2 cm
+} % section title spacing
+
+% \renewcommand\labelitemi{$\vcenter{\hbox{\small$\bullet$}}$} % custom bullet points
+\newenvironment{highlights}{
+    \begin{itemize}[
+        topsep=0.10 cm,
+        parsep=0.10 cm,
+        partopsep=0pt,
+        itemsep=0pt,
+        leftmargin=0.4 cm + 10pt
+    ]
+}{
+    \end{itemize}
+} % new environment for highlights
+
+\newenvironment{highlightsforbulletentries}{
+    \begin{itemize}[
+        topsep=0.10 cm,
+        parsep=0.10 cm,
+        partopsep=0pt,
+        itemsep=0pt,
+        leftmargin=10pt
+    ]
+}{
+    \end{itemize}
+} % new environment for highlights for bullet entries
+
+
+\newenvironment{onecolentry}{
+    \begin{adjustwidth}{
+        0.2 cm + 0.00001 cm
+    }{
+        0.2 cm + 0.00001 cm
+    }
+}{
+    \end{adjustwidth}
+} % new environment for one column entries
+
+\newenvironment{twocolentry}[2][]{
+    \onecolentry
+    \def\secondColumn{#2}
+    \setcolumnwidth{\fill, 4.5 cm}
+    \begin{paracol}{2}
+}{
+    \switchcolumn \raggedleft \secondColumn
+    \end{paracol}
+    \endonecolentry
+} % new environment for two column entries
+
+\newenvironment{threecolentry}[3][]{
+    \onecolentry
+    \def\thirdColumn{#3}
+    \setcolumnwidth{1 cm, \fill, 4.5 cm}
+    \begin{paracol}{3}
+    {\raggedright #2} \switchcolumn
+}{
+    \switchcolumn \raggedleft \thirdColumn
+    \end{paracol}
+    \endonecolentry
+} % new environment for three column entries
+
+\newenvironment{header}{
+    \setlength{\topsep}{0pt}\par\kern\topsep\centering\color{primaryColor}\linespread{1.5}
+}{
+    \par\kern\topsep
+} % new environment for the header
+
+\newcommand{\placelastupdatedtext}{% \placetextbox{<horizontal pos>}{<vertical pos>}{<stuff>}
+  \AddToShipoutPictureFG*{% Add <stuff> to current page foreground
+    \put(
+        \LenToUnit{\paperwidth-2 cm-0.2 cm+0.05cm},
+        \LenToUnit{\paperheight-1.0 cm}
+    ){\vtop{{\null}\makebox[0pt][c]{
+        \small\color{gray}\textit{ }\hspace{\widthof{ }}
+    }}}%
+  }%
+}%
+
+% save the original href command in a new command:
+\let\hrefWithoutArrow\href
+
+% new command for external links:
+\renewcommand{\href}[2]{\hrefWithoutArrow{#1}{\ifthenelse{\equal{#2}{}}{ }{#2 }\raisebox{.15ex}{\footnotesize \faExternalLink*}}}
+
+
+\begin{document}
+    \newcommand{\AND}{\unskip
+        \cleaders\copy\ANDbox\hskip\wd\ANDbox
+        \ignorespaces
+    }
+    \newsavebox\ANDbox
+    \sbox\ANDbox{}
+
+    \placelastupdatedtext
+    \begin{header}
+        \fontsize{30 pt}{30 pt}
+        \textbf{Le Viet Hung}
+        \vspace{0.3 cm}
+        
+        \normalsize
+        \mbox{{\footnotesize\faMapMarker*}\hspace*{0.13cm}Hai Ba Trung, Ha Noi}%
+        \kern 0.25 cm%
+        \AND%
+        \kern 0.25 cm%
+        \mbox{\hrefWithoutArrow{mailto: leviethung17112003@gmail.com}{{\footnotesize\faEnvelope[regular]}\hspace*{0.13cm}leviethung17112003@gmail.com}}%
+        \kern 0.25 cm%
+        \AND%
+        \kern 0.25 cm%
+        \mbox{\hrefWithoutArrow{tel: 0346164157}{{\footnotesize\faPhone*}\hspace*{0.13cm}0346164157}}%
+        \kern 0.25 cm%
+        \AND%
+        \kern 0.25 cm%
+        \mbox{\hrefWithoutArrow{https://noname1711.github.io/}{{\footnotesize\faLink}\hspace*{0.13cm}Professional Profile Website}}%
+        \kern 0.25 cm%
+        \AND%
+        \kern 0.25 cm%
+        \mbox{\hrefWithoutArrow{https://www.linkedin.com/in/le-hung-062585306/}{{\footnotesize\faLinkedinIn}\hspace*{0.13cm}My LinkedIn}}%
+        \kern 0.25 cm%
+        \AND%
+        \kern 0.25 cm%
+        \mbox{\hrefWithoutArrow{https://github.com/noname1711}{{\footnotesize\faGithub}\hspace*{0.13cm}My Github}}%
+    \end{header}
+    \vspace{0.3 cm - 0.3 cm}
+
+
+    \section{Career Objective}        
+        \begin{onecolentry}
+            As a senior student at Hanoi University of Science and Technology (HUST), majoring in Electronics and Telecommunications Engineering with a focus on Computer Engineering, I may not yet have extensive experience, but I possess a strong passion for learning and a deep interest in embedded systems, C/C++ programming, and Linux-base development.
+        \end{onecolentry}
+        \vspace{0.2 cm}
+        \begin{onecolentry}
+            I am eager to join a professional environment where I can contribute to meaningful projects, gain practical experience, and continuously develop my skills, particularly in areas related to embedded Linux and Android systems. I approach every opportunity with responsibility, curiosity, and a willingness to take on challenges beyond my comfort zone.
+        \end{onecolentry}
+
+
+    \section{Education}
+    \begin{threecolentry}
+        {\textbf{B.Eng.}}
+        {Sep 2021 -- 2025}
+        {\textbf{Hanoi University of Science and Technology}}
+        \begin{highlights}
+            \item Bachelor's degree in Electronics and Telecommunications Engineering, specializing in Computer Engineering.
+            \item GPA: \textbf{3.2/4.0}
+            \item Relevant coursework: Operating Systems, Microprocessor Systems, Data Structures \& Algorithms, Object-Oriented Programming, Cryptographic theory, Digital Signal Processing, Analog \& Digital Electronics.
+            \item Entrance exam score: \textbf{27.35/30} in A00 block (Mathematics, Physics, Chemistry).
+        \end{highlights}
+    \end{threecolentry}
+    \vspace{0.2 cm}
+    \begin{threecolentry}
+        {\textbf{Eng.}}
+        {2025 -- Expected 2026}
+        {\textbf{Hanoi University of Science and Technology}}
+        \begin{highlights}
+            \item Pursuing an Engineering Degree with advanced coursework in Computer Engineering.
+            \item CPA: \textbf{3.35/4.0}
+            \item Studying RISC-V-based Computer Architecture, Computer Vision, Artificial Intelligence, and embedded/system-level development.
+        \end{highlights}
+    \end{threecolentry}
+
+    
+    \section{Experience}
+        \begin{twocolentry}{
+            Nov 2022 
+        }
+            \textbf{BKFet Research Lab}, Embedded Systems Research Student
+            \begin{highlights}
+                \item Engaged in research on embedded systems and intelligent hardware for IoT applications.
+                \item Designed circuit schematics and PCB layouts using Altium Designer and simulation tools such as Proteus and LTspice.
+                \item Developed web interfaces using HTML, CSS, JavaScript, Laravel, and React for device management and visualization.
+                \item Built mobile applications for Android/iOS platforms.
+            \end{highlights}
+        \end{twocolentry}
+        \vspace{0.2 cm}
+        \begin{twocolentry}{
+            Apr 2024
+        }
+            \textbf{IoT Challenge}, Smart Home Project Participant
+            \begin{highlights}
+                \item Participated in an IoT competition organized by FPT Software with a project on smart home automation.
+                \item Developed a system integrating sensors, actuators, and remote control via mobile/web interfaces.
+            \end{highlights}
+        \end{twocolentry}
+
+   
+    \section{Skills}
+    \begin{itemize}
+        \item \textbf{Core Focus:} Embedded Linux, system-level software, microcontroller-based embedded systems, and intelligent embedded applications
+
+        \item \textbf{Programming Languages:} C, C++, Python, Bash, Kotlin, JavaScript
+
+        \item \textbf{Embedded Linux \& System Software:} Raspberry Pi, Yocto, GCC, Qt 5, Makefile, Shell scripting, process management, memory management, IPC, multithreading, device drivers, Device Tree
+
+        \item \textbf{Debugging \& Diagnostics:} GDB, Valgrind, strace, minicom, UART/serial console debugging
+
+        \item \textbf{Embedded Hardware \& Microcontrollers:} ESP32, Arduino, ATmega16, GPIO, UART, SPI, I2C, sensors, interrupts, low-power modes
+
+        \item \textbf{Computer Vision \& AI:} OpenCV, NumPy, PyTorch, TensorFlow, Matplotlib, basic AI/ML fundamentals
+
+        \item \textbf{Android / Web Development:} Kotlin, HTML, CSS, JavaScript, React, Spring Boot, REST API
+
+        \item \textbf{Database \& Data Formats:} SQLite, Firebase, PostgreSQL, JSON
+
+        \item \textbf{Tools:} VSCode, Git/GitHub, Google Colab, LaTeX, Markdown
+
+        \item \textbf{Soft Skills:} Aptis B2 English certification, technical document reading, self-learning, AI-assisted learning, teamwork, public speaking, problem-solving, and time management
+    \end{itemize}
+
+    
+    \section{Projects}
+                \begin{twocolentry}{
+            \href{https://github.com/noname1711/AI-ADAS-Smart-Mirror}{AI ADAS SmartMirror} \\
+            \href{https://drive.google.com/file/d/1Vc1Iq77mD3SUxG8VemLA-JSSDl_arf5w/view?usp=drive_link}{Project Report}
+        }
+            \textbf{AI ADAS SmartMirror}
+            \begin{highlights}
+                \item Developed a Smart Mirror AI ADAS system on Raspberry Pi with Yocto-based embedded Linux, supporting lane departure warning (LDW), forward collision warning (FCW), and real-time visual alerts.
+
+                \item Designed a multi-process architecture with a Qt5 frontend for camera visualization and warning overlays, and a backend daemon using GStreamer and OpenCV for video acquisition and computer vision processing.
+
+                \item Implemented low-latency IPC using GStreamer shared memory for video frames and TCP sockets with JSON for AI results, metrics, and control commands.
+
+                \item Highly evaluated during the graduation thesis defense for its practical embedded Linux implementation and extensible ADAS architecture.
+
+                \item Techs Used: Raspberry Pi, Yocto Project, Embedded Linux, Qt5, GStreamer, OpenCV, systemd, shared memory, TCP socket, JSON
+            \end{highlights}
+        \end{twocolentry}
+
+        \vspace{0.2 cm}
+        
+        \begin{twocolentry}{
+            \href{https://github.com/noname1711/FireAlertPro}{FireAlertPro}
+        }
+            \textbf{Fire Alert System}
+            \begin{highlights}
+                \item Developed an IoT-based fire alarm system for apartment buildings using ESP32. Each room acts as a node with gas, temperature, and humidity sensors. Data is transmitted in JSON format via HTTP (POST/GET) to a custom server. The system supports light sleep for power saving, interrupt-based manual alerts, and mobile notifications via app.
+                \item Techs Used: C++, Kotlin, Python, Flask, HTML, CSS, JavaScript, ESP32
+            \end{highlights}
+        \end{twocolentry}
+
+
+        \vspace{0.2 cm}
+
+        \begin{twocolentry}{
+            \href{https://github.com/noname1711/mutex_lib_app}{MutexLibrary}
+        }
+            \textbf{Mutex library for network applications}
+            \begin{highlights}
+                \item Developed a networked application using IPv4 stream sockets with a mutex permission-based mechanism to prevent deadlocks. Additionally, the system was simulated via a web-based interface.
+                \item Techs Used: Makefile, C, HTML, CSS, JavaScript, Linux
+            \end{highlights}
+        \end{twocolentry}
+
+        \vspace{0.2 cm}
+
+        \begin{twocolentry}{
+            \href{https://github.com/noname1711/MOT}{MOT}
+        }
+            \textbf{Multi Object Tracking}
+            \begin{highlights}
+                \item Developed a web-based multi-object tracking system for detecting and tracking vehicle from a computer camera or uploaded video files.
+
+                \item Integrated YOLOv5 for vehicle detection and DeepSORT for object tracking, enabling real-time visualization with unique object IDs.
+
+                \item Implemented evaluation and statistics features to analyze tracking performance using metrics such as precision, recall, and detection/tracking results.
+
+                \item Techs Used: Python, OpenCV, YOLOv5, DeepSORT, HTML, CSS, JavaScript
+            \end{highlights}
+        \end{twocolentry}
+
+        \vspace{0.2 cm}
+
+        \begin{twocolentry}{
+            \href{https://github.com/noname1711/Medventory-HMU}{Medventory}
+        }
+            \textbf{Medventory-HMU}
+            \begin{highlights}
+                \item Developed a full-stack medical supplies management system for Hanoi Medical University, supporting authentication, account approval, material management, stock tracking, and business notifications.
+
+                \item Built a Spring Boot REST API backend, React/Vite frontend, and PostgreSQL database with a layered architecture using Controller, Service, Repository, DTO, and Entity components.
+
+                \item Implemented RBAC-based permission management and inventory workflows including issue requests, receipt slips, issue slips, replenishment forecasts, approval processes, and lot-based stock tracking.
+
+                \item Techs Used: Java 17, Spring Boot, Spring Data JPA, PostgreSQL, React, Vite, REST API
+            \end{highlights}
+        \end{twocolentry}
+
+        \vspace{0.2 cm}
+
+        \begin{twocolentry}{
+            \href{https://github.com/noname1711/YouNMe}{YouNMe}
+        }
+            \textbf{Social media application}
+            \begin{highlights}
+                \item Developed a real-time messaging application with user registration, login, customizable interface, status posting, commenting, and messaging between user accounts.
+                \item Techs Used: Kotlin, Firebase
+            \end{highlights}
+        \end{twocolentry}
+
+
+        \vspace{0.2 cm}
+
+        \begin{twocolentry}{
+            \href{https://github.com/noname1711/QLTC}{QLTC}
+        }
+            \textbf{Personal Finance}
+            \begin{highlights}
+                \item Developed a personal finance management application supporting income and expense tracking, bill management, profit/loss analysis with alerts, and annual data visualization through interactive charts. Included user authentication via Gmail and multilingual support in English and Vietnamese.
+                \item Techs Used: Kotlin, Firebase
+            \end{highlights}
+        \end{twocolentry}
+
+\end{document}

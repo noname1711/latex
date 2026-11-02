@@ -1,0 +1,84 @@
+
+{
+    "files.autoSave": "afterDelay",
+    "files.autoSaveDelay": 1500,
+
+    "latex-workshop.latex.autoBuild.run": "onFileChange",
+
+    "latex-workshop.view.pdf.viewer": "tab",
+    "latex-workshop.view.pdf.tab.editorGroup": "right",
+    "latex-workshop.view.pdf.zoom": "page-width",
+    "latex-workshop.view.pdf.scrollMode": 0,
+
+    "latex-workshop.view.pdf.internal.synctex.keybinding": "ctrl-click",
+    "latex-workshop.synctex.afterBuild.enabled": true,
+
+    "latex-workshop.latex.outDir": "%DIR%/build",
+
+    "latex-workshop.latex.rootFile.useSubFile": false,
+    "latex-workshop.latex.rootFile.doNotPrompt": true,
+
+    "latex-workshop.latex.recipe.default": "first",
+
+    "latex-workshop.latex.recipes": [
+        {
+            "name": "latexmk (pdfLaTeX)",
+            "tools": [
+                "latexmk-pdf"
+            ]
+        },
+        {
+            "name": "latexmk (XeLaTeX)",
+            "tools": [
+                "latexmk-xe"
+            ]
+        }
+    ],
+
+    "latex-workshop.latex.tools": [
+        {
+            "name": "latexmk-pdf",
+            "command": "latexmk",
+            "args": [
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "-pdf",
+                "-outdir=%OUTDIR%",
+                "%DOC%"
+            ]
+        },
+        {
+            "name": "latexmk-xe",
+            "command": "latexmk",
+            "args": [
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "-xelatex",
+                "-outdir=%OUTDIR%",
+                "%DOC%"
+            ]
+        }
+    ],
+
+    "latex-workshop.latex.autoClean.run": "never",
+
+    "files.exclude": {
+        "**/build": true
+    },
+
+    "search.exclude": {
+        "**/build": true
+    },
+
+    "[latex]": {
+        "editor.wordWrap": "on",
+        "editor.tabSize": 4,
+        "editor.quickSuggestions": {
+            "other": true,
+            "comments": false,
+            "strings": true
+        }
+    }
+}
